@@ -1,0 +1,18 @@
+[user]
+	name = François Michonneau
+	email = francois.michonneau@gmail.com
+	signingkey = 037DBA3399ECB8E4
+[core]
+	editor = emacs
+	excludesfile = ~/.gitignore_global
+	autocrlf = input
+[push]
+	default = simple
+[credential]
+	helper = cache
+[color]
+	ui = auto
+[github]
+	user = fmichonneau
+[commit]
+	gpgsign = true
