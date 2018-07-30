@@ -16,8 +16,10 @@ options(repos = c(
         ## warnPartialMatchArgs = TRUE,
         ## devtools
         devtools.name = "Francois Michonneau",
-        devtools.desc.author = "person(\"Francois\", \"Michonneau\", role=c(\"aut\", \"cre\"),
-                                email=\"francois.michonneau@gmail.com\")",
+        devtools.desc.author =
+          "person(\"Francois\", \"Michonneau\", role = c(\"aut\", \"cre\"),
+               email = \"francois.michonneau@gmail.com\",
+               comment = c(\"ORCID\" = \"0000-0002-9092-966X\"))",
         devtools.desc.license = "MIT + file LICENSE",
         devtools.revdep.libpath = "~/.R/revdep-library/", # library for checking reverse dependencies
         devtools.path = "~/.R-dev-lib"			  # library for devtools' dev_mode
