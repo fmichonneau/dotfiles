@@ -55,3 +55,6 @@ flycheck_*.el
 *.*~
 *.log
 
+# R files
+.Rhistory
+.RData
