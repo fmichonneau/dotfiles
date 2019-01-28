@@ -1,4 +1,4 @@
-try(source("http://bioconductor.org/biocLite.R"))
+.Library.site <- "/home/francois/.R/library"
 
 Sys.setenv(MAKEFLAGS = "-j7")
 
@@ -44,8 +44,17 @@ load_rtweet <- function() {
 
 auto_update <- function() {
   ## Autoupdates packages and cleans everything
-  source("~/.R/autoUpdate.R")
-  autoUpdate()
+  if (require(sys, quietly = TRUE) && interactive()) {
+    sys::exec_background("R", c("-q", "-e",
+      "source('~/.R/autoUpdate.R'); autoUpdate()"),
+      std_out = paste0("/tmp/",
+        format(Sys.time(), "%Y%m%d-%H%M%S"),
+        "-r-pkg-update-out.log"),
+      std_err = paste0("/tmp/",
+        format(Sys.time(), "%Y%m%d-%H%M%S"),
+        "-r-pkg-update-err.log"))
+  } else warning("install sys package to keep your library up to date.")
+}
 
 ## From: http://stackoverflow.com/questions/27129622/define-a-callback-for-command-start/40963728#40963728
 notify_long_running <- function(second_cutoff = 30) {
