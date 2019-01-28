@@ -47,20 +47,20 @@ auto_update <- function() {
   source("~/.R/autoUpdate.R")
   autoUpdate()
 
-  ## From: http://stackoverflow.com/questions/27129622/define-a-callback-for-command-start/40963728#40963728
-    notify_long_running <- function(second_cutoff = 30) {
-        last <- proc.time()[1]
-        function(expr, value, ok, visible) {
-            duration <- proc.time()[1] - last
-            if (duration > second_cutoff) {
-                notifier::notify(msg = paste0(collapse = " ", deparse(expr)),
-                                 title = sprintf("Completed in %.02f (s)", duration))
-            }
-            last <<- proc.time()[1]
-            TRUE
-        }
+## From: http://stackoverflow.com/questions/27129622/define-a-callback-for-command-start/40963728#40963728
+notify_long_running <- function(second_cutoff = 30) {
+  last <- proc.time()[1]
+  function(expr, value, ok, visible) {
+    duration <- proc.time()[1] - last
+    if (duration > second_cutoff) {
+      notifier::notify(msg = paste0(collapse = " ", deparse(expr)),
+                       title = sprintf("Completed in %.02f (s)", duration))
     }
-    addTaskCallback(notify_long_running())
+    last <<- proc.time()[1]
+    TRUE
+  }
+
+  addTaskCallback(notify_long_running())
 }
 
 show_fortune <- function()  {
