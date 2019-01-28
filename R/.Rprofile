@@ -9,7 +9,7 @@ options(repos = c(
         editor = "emacsclient",
         browserNLdisabled = TRUE,
         Ncpus = 7L,
-        max.print = 100,
+        max.print = 100L,
         ## warn on partial matches
         ## warnPartialMatchAttr = TRUE,
         ## warnPartialMatchDollar = TRUE,
