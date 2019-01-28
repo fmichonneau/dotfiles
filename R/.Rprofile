@@ -22,7 +22,9 @@ options(repos = c(
                comment = c(\"ORCID\" = \"0000-0002-9092-966X\"))",
         devtools.desc.license = "MIT + file LICENSE",
         devtools.revdep.libpath = "~/.R/revdep-library/", # library for checking reverse dependencies
-        devtools.path = "~/.R-dev-lib"			  # library for devtools' dev_mode
+        devtools.path = "~/.R-dev-lib", 			  # library for devtools' dev_mode
+        error =  quote(rlang::entrace()),
+        rlang__backtrace_on_error = "collapse"
         )
 
 load_rtweet <- function() {
