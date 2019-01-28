@@ -80,6 +80,8 @@ foghorn_results <- function() {
   }
 }
 
+
+
 if (interactive()) {
   zz <- try(auto_update(), silent=FALSE)
   if (inherits(zz, "try-error"))
@@ -88,5 +90,5 @@ if (interactive()) {
   suppressPackageStartupMessages(library(lookup))
   show_fortune()
   foghorn_results()
-  rm(list=ls())
+  rm(list = ls())
 }
