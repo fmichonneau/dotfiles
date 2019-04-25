@@ -93,7 +93,7 @@
 ")
  '(ess-roxy-tags-param
    (quote
-    ("author" "aliases" "concept" "details" "examples" "format" "keywords" "method" "exportMethod" "name" "note" "param" "include" "references" "return" "seealso" "source" "docType" "title" "TODO" "usage" "import" "exportClass" "exportPattern" "S3method" "inheritParams" "importFrom" "importClassesFrom" "importMethodsFrom" "useDynLib" "rdname" "section" "slot" "template" "family")))
+    ("author" "aliases" "concept" "details" "examples" "format" "keywords" "method" "md" "exportMethod" "name" "note" "param" "include" "references" "return" "seealso" "source" "docType" "title" "TODO" "usage" "import" "exportClass" "exportPattern" "S3method" "inheritParams" "importFrom" "importClassesFrom" "importMethodsFrom" "useDynLib" "rdname" "section" "slot" "template" "family")))
  '(ess-roxy-template-alist
    (quote
     (("description" . ".. content for \\description{} (no empty lines) ..")
