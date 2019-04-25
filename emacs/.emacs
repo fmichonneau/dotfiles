@@ -115,6 +115,7 @@
     ("SCCS" "RCS" "CVS" "MCVS" ".src" ".svn" ".git" ".hg" ".bzr" "_MTN" "_darcs" "{arch}" "_site")))
  '(inferior-R-args "--no-restore-history --no-save ")
  '(magit-commit-arguments (quote ("--gpg-sign=037DBA3399ECB8E4")))
+ '(markdown-command "pandoc")
  '(package-selected-packages
    (quote
     (all-the-icons easy-jekyll jekyll-modes evil-tutor beacon focus dockerfile-mode company-irony emacs-material-theme yasnippet yaml-mode writeroom-mode use-package string-inflection ssh-agency polymode nlinum multiple-cursors math-symbol-lists markdown-mode magithub linum-off keychain-environment key-combo git-commit-insert-issue gh flymake-yaml flycheck flx-ido exec-path-from-shell ess electric-spacing company-flx checkbox auto-package-update auctex ace-jump-mode))))
