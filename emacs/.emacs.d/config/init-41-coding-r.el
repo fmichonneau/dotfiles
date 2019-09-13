@@ -20,45 +20,68 @@
 )
 
 ;; polymode --------------------------------------------------------------------
-(use-package polymode
-  :ensure t
-  :init
-  (require 'poly-R)
-  (require 'poly-markdown)
+(use-package poly-markdown)
+
+(use-package poly-R
   :config
-  (add-to-list 'auto-mode-alist '("\\.md" . poly-markdown-mode))
-  (add-to-list 'auto-mode-alist '("\\.Snw" . poly-noweb+r-mode))
-  (add-to-list 'auto-mode-alist '("\\.Rnw" . poly-noweb+r-mode))
-  (add-to-list 'auto-mode-alist '("\\.Rmd" . poly-markdown+r-mode))
-  (add-to-list 'auto-mode-alist '("\\.Rpres" . poly-markdown+r-mode))
-  (add-to-list 'auto-mode-alist '("\\.Rhtml" . poly-html+r-mode))
-  (add-to-list 'auto-mode-alist '("\\.Rcpp" . poly-r+c++-mode))
-  (add-to-list 'auto-mode-alist '("\\.cppR" . poly-c++r-mode))
-  )
+  (require 'ess-mode))
+
 
 ;; ESS -------------------------------------------------------------------------
-(use-package ess
-  :ensure t
+;; R process in its own window (to the right)
+(defun fm/r()
+  "start R with a reasonable layout."
+  (interactive)
+  ;; Create new window right of the current one
+  ;; Current window is 80 characters (columns) wide
+  (split-window-right 120)
+  ;; Go to next window
+  (other-window 1)
+  ;; Create new window below current one
+  (split-window-below)
+  ;; Start R in current window
+  (R)
+  ;; Go to previous window
+  (other-window -1)
+  ;; never open any buffer in window with shell
+  (set-window-dedicated-p (nth 1 (window-list)) t))
+
+
+(use-package ess-r-mode
+  :ensure ess
   :commands R
+  :bind
+  ;; _ is <-
+  (:map ess-r-mode-map
+        ("_" . ess-insert-assign))
+  (:map inferior-ess-r-mode-map
+        ("_" . ess-insert-assign))
+
   :config
-  (setq ess-eval-visibly t)
+  (setenv "IS_ESS" "true")
+  (setq ess-eval-visibly 'nowait)
 
-  ;; R process in its own buffer
-  (setq inferior-ess-same-window nil)
+  ;; don't ask for working directory
+  (setq ess-ask-for-ess-directory nil)
 
+  ;; No history no save
+  (setq ess-history-file nil)
+  (setq inferior-R-args "--no-restore-history --no-save ")
 
   ;; ESS style
-  (setq ess-default-style 'RStudio)
+  (setq ess-style 'RStudio-)
+  (setq ess-offset-arguments 'prev-line)
 
   ;; All help buffers are shown in one dedicated frame
   (setq ess-help-own-frame 'one)
 
-  ;; Rd mode
+  ;; ;; Rd mode
   (add-to-list 'auto-mode-alist '("\\.rd\\'" . Rd-mode))
   (add-hook 'Rd-mode-hook
-	    (lambda ()
-	      (abbrev-mode 1)
-	      (font-lock-mode 1)))
+            (lambda ()
+              (abbrev-mode 1)
+              (font-lock-mode 1)))
+
   ;; Cursor always at the end of eval (from ESS-help 20110911)
   (setq comint-scroll-to-bottom-on-input t)
   (setq comint-scroll-to-bottom-on-output t)
@@ -68,6 +91,7 @@
   ;; redefine previous/commands
   (define-key comint-mode-map [(meta ?p)] 'comint-previous-matching-input-from-input)
   (define-key comint-mode-map [(meta ?n)] 'comint-next-matching-input-from-input)
+
   )
 
 ;; Key combo -------------------------------------------------------------------
