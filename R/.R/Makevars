@@ -7,6 +7,8 @@ CXX14=$(CCACHE) g++$(VER)
 FC=$(CCACHE) gfortran$(VER)
 F77=$(CCACHE) gfortran$(VER)
 
+CFLAGS="-Wall"
+CXXFLAGS="-Wall"
 
 # ## CFLAGS="-I/usr/include/libxml2"
 # ##

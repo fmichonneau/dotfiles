@@ -6,6 +6,9 @@ local({
     Ncpus = 7L,
     max.print = 100L,
     error =  quote(rlang::entrace()),
-    rlang__backtrace_on_error = "collapse"
+    rlang_backtrace_on_error = "collapse",
+    warnPartialMatchAttr = TRUE,
+    warnPartialMatchDollar = TRUE,
+    warnPartialMatchArgs = TRUE
   )
 })
