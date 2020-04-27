@@ -16,3 +16,8 @@
 	user = fmichonneau
 [commit]
 	gpgsign = true
+[branch]
+	autosetuprebase = always
+[usethis]
+[remote "origin"]
+	fetch = +refs/pull/*/head:refs/remotes/origin/pr/*
