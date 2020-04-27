@@ -1,0 +1,17 @@
+{
+    "segments": [
+        "virtual_env",
+        "aws_profile",
+        "ssh",
+        "cwd",
+        "git",
+        "git_stash",
+        "hg",
+        "set_term_title",
+        "jobs",
+        "root"
+    ],
+    "cwd": {
+        "max_depth": 4
+    }
+}
