@@ -1,3 +1,3 @@
 local({
-library(usethis, quietly = TRUE)
+  library(usethis, quietly = TRUE, warn.conflicts = FALSE)
 })

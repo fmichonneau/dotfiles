@@ -1,3 +1,3 @@
 local({
-  library(testthat, quietly=TRUE)
+  library(testthat, quietly=TRUE, warn.conflicts = FALSE)
 })
