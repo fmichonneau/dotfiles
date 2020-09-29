@@ -6,10 +6,15 @@ is_outdated <- function(path_last_updated, max_days = 7) {
   if (!file.exists(path_last_updated)) {
     return(TRUE)
   }
-
   last_updated <- readRDS(path_last_updated)
 
-  difftime(Sys.time() - last_updated, unit = "days") > 7
+  time_since_update <- difftime(Sys.time(), last_updated, units = "days")
+
+  res <- time_since_update > 7
+  attr(res, "last_update_in_days") <- floor(
+    as.numeric(time_since_update)
+  )
+  res
 }
 
 auto_update <- function(update_freq = 7,
@@ -17,11 +22,6 @@ auto_update <- function(update_freq = 7,
                         lib.loc = "~/.R/library/") {
 
   if (!is_outdated(last_updated)) {
-    last_updated <- readRDS(path_last_updated)
-    next_update <- floor(
-      update_freq - difftime(Sys.time(), last_updated, unit = "days")
-    )
-    message("Next update in ", next_update,  "days.")
     return(invisible())
   }
 
