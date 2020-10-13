@@ -8,7 +8,9 @@ local({
   if (file.exists("~/.R/.date-last-update.rds")) {
     last_update <- readRDS("~/.R/.date-last-update.rds")
     cli::cli_alert(
-      "Last update on {last_update} ({last_update_days} days ago)."
+      cli::pluralize(
+        "Library last update on {last_update} ({last_update_days} day{?s} ago)."
+      )
     )
   } else {
     cli::cli_alert_danger("Last updated file does not exist.")

@@ -22,6 +22,7 @@ auto_update <- function(update_freq = 7,
                         lib.loc = "~/.R/library/") {
 
   if (!is_outdated(last_updated)) {
+    cli::cli_alert_success("Library is up to date.")
     return(invisible())
   }
 
