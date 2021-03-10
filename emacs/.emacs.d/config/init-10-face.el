@@ -39,6 +39,12 @@
   :ensure t
   )
 
+;; emoji
+(use-package emojify
+  :ensure t
+  :hook (after-init . global-emojify-mode)
+  )
+
 ;; Set default fill column
 (setq-default fill-column 80)
 
