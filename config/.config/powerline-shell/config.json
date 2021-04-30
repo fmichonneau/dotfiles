@@ -13,5 +13,7 @@
     ],
     "cwd": {
         "max_depth": 4
-    }
+    },
+    "mode": "patched",
+    "theme": "gruvbox"
 }
