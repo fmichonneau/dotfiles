@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: rmd-block
+# key: rb
+# --
+\`\`\`{r $1}
+$0
+\`\`\`
