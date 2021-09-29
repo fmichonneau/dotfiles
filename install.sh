@@ -7,6 +7,6 @@ stow config
 stow bash
 stow ccache
 
-printf "0 9 * *  * /usr/bin/Rscript -e 'source(\"~/.R/auto_update.R\"); auto_update()' 2>&1\n" > ~/etc/crontab
+printf "## don't edit this file by hand, edit the install script instead\n38 6,9,12 * * * bash /home/francois/.R/update_library.sh >> /tmp/update_r_library.log 2>&1\n" > ~/etc/crontab
 
 crontab ~/etc/crontab
