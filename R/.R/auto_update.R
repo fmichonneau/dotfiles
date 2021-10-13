@@ -10,7 +10,7 @@ is_outdated <- function(path_last_updated, max_days = 7) {
 
   time_since_update <- difftime(Sys.time(), last_updated, units = "days")
 
-  res <- time_since_update > max_days
+  res <- time_since_update >=  max_days
   attr(res, "last_update_in_days") <- floor(
     as.numeric(time_since_update)
   )
