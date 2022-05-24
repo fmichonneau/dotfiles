@@ -27,13 +27,22 @@ auto_update <- function(update_freq = 7,
     return(invisible())
   }
 
-  message("It's time to update your packages... it can take some time...")
+  cli::cli_alert_info(
+    "It's time to update your packages... it can take some time..."
+  )
 
   ow <- options("warn")
   options(warn = 2) # warnings are turned into err msg
   on.exit(options(ow))
 
   to_upgrade <- old.packages(lib.loc = lib.loc, checkBuilt = TRUE)[, "Package"]
+
+  if (is.null(to_upgrade)) {
+    create_last_updated(last_updated)
+    cli::cli_alert_info("All packages are up to date!")
+    return(invisible())
+  }
+
   z <- try(
     capture.output({
       pak::pkg_install(to_upgrade, ask = FALSE)
