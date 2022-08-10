@@ -1,0 +1,37 @@
+## For this to work add the following at the bottom of ~/.bashrc
+# if [ -f ~/.bash_customizations ]; then
+#    . ~/.bash_customizations
+# fi
+
+
+## Powerline Shell
+function _update_ps1() {
+    PS1=$(powerline-shell $?)
+}
+
+
+## History configuration
+
+# append to the history file, don't overwrite it
+shopt -s histappend
+
+# for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
+HISTSIZE=-1
+HISTFILESIZE=-1
+
+# search history
+bind '"\e[A": history-search-backward'
+bind '"\e[B": history-search-forward'
+
+# After each command, append to the history file and reread it
+PROMPT_COMMAND="${PROMPT_COMMAND:+$PROMPT_COMMAND$'\n'}history -a; history -c; history -r"
+
+if [[ $TERM != linux && ! $PROMPT_COMMAND =~ _update_ps1 ]]; then
+    PROMPT_COMMAND="_update_ps1; $PROMPT_COMMAND"
+fi
+
+# Make sure we enable wayland for firefox
+export MOZ_ENABLE_WAYLAND=1
+
+## for rbenv shell integration:
+eval "$(rbenv init - bash)"
