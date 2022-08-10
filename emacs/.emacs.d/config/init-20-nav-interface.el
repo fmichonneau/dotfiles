@@ -59,12 +59,20 @@
 (define-key global-map "\M-Q" 'unfill-paragraph)
 (define-key global-map "\C-\M-q" 'unfill-region)
 
+;; from: https://stackoverflow.com/questions/9597391/emacs-move-point-to-last-non-whitespace-character
+(defun my-move-end-of-line-before-whitespace ()
+  "Move to the last non-whitespace character in the current line."
+  (interactive)
+  (move-end-of-line nil)
+  (re-search-backward "^\\|[^[:space:]]"))
+
+(define-key global-map "\C-e" 'my-move-end-of-line-before-whitespace)
 
 ;;; use visual fill for text width
 (use-package visual-fill-column
   :ensure t
   :init
-  (dolist (hook '(text-mode-hook prog-mode-hook emacs-lisp-mode-hook))
+  (dolist (hook '(text-mode-hook emacs-lisp-mode-hook))
     (add-hook hook #'visual-fill-column-mode))
   :config
   ;; remove the margin before splitting buffers
@@ -114,5 +122,8 @@
   (global-set-key [f8] 'neotree-toggle)
   )
 
-
-;;; init-20-nav-interface.el ends here
+;; File name in title bar
+(setq frame-title-format
+      '((:eval (if (buffer-file-name)
+                   (abbreviate-file-name (buffer-file-name))
+                 "%b"))))

@@ -4,7 +4,9 @@
   :defer t
   :mode (("\\.text\\'" . markdown-mode)
          ("\\.markdown\\'" . markdown-mode)
-         ("\\.md\\'" . markdown-mode))
+         ("\\.md\\'" . markdown-mode)
+         ("README\\.md\\'". gfm-mode))
+  :init (setq markdown-command "pandoc")
   )
 
 (use-package flyspell

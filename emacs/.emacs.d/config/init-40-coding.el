@@ -68,7 +68,6 @@
   )
 
 
-
 ;; == ag ==
 ;; Note that 'ag' (the silver searcher) needs to be installed.
 ;; Ubuntu: sudo apt-get install silversearcher-ag
@@ -109,6 +108,12 @@
 ;;   (add-hook 'after-init-hook #'global-flycheck-mode)
 ;;   )
 
+;; editorconfig ----------------------------------------------------------------
+(use-package editorconfig
+  :ensure t
+  :config
+  (editorconfig-mode 1))
+
 ;; CSS colors ------------------------------------------------------------------
 ;; CSS color values colored by themselves
 ;; http://xahlee.org/emacs/emacs_html.html
@@ -133,6 +138,21 @@
       (insert-char ?-))))
 
 
+(defun fill-fence ()
+  (interactive)
+  (save-excursion
+    (beginning-of-line)
+    (let ((n (- (line-end-position) (line-beginning-position))))
+      (while (< (current-column) (- 50 n))
+        (insert-char ?:))
+      (if (> n 0) (insert-char ? ))
+      (if (eq n 0) (insert-char ?:))
+      )
+    )
+  )
+
+
+
 ;; Dockerfile editing ----------------------------------------------------------
 
 (use-package dockerfile-mode
@@ -143,15 +163,17 @@
 
 
 ;; Aggressive-indent mode ------------------------------------------------------
-
 (use-package aggressive-indent
   :ensure t
   :defer t
   :init
   (global-aggressive-indent-mode 1)
-  (add-to-list 'aggressive-indent-excluded-modes 'html-mode)
+  (add-to-list 'aggressive-indent-excluded-modes 'mhtml-mode)
   (add-to-list 'aggressive-indent-excluded-modes 'yaml-mode)
-  (add-to-list 'aggressive-indent-excluded-modes 'poly-head-tail-mode)
+  (add-hook 'ess-mode-hook #'(lambda ()
+                               (when (and (stringp buffer-file-name)
+                                          (string-match "\\.Rmd\\'" buffer-file-name))
+                                 (aggressive-indent-mode 0))))
   )
 
 ;; Always use spaces for indentation
@@ -163,3 +185,26 @@
           (lambda ()
             (font-lock-add-keywords nil
                                     '(("\\<\\(FIX\\|FIXME\\|TODO\\|BUG\\|HACK\\|\\WARNING):" 1 font-lock-warning-face t)))))
+
+;; lsp-mode
+(use-package lsp-mode
+  :ensure t
+  :init
+  ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
+  (setq lsp-keymap-prefix "C-c l")
+  :hook (;; replace XXX-mode with concrete major-mode(e. g. python-mode)
+         (html-mode . lsp)
+         ;; if you want which-key integration
+         (lsp-mode . lsp-enable-which-key-integration))
+  :commands lsp)
+
+;; optionally
+(use-package lsp-ui :commands lsp-ui-mode)
+
+;; Disable line wrapping and indentation in HTML mode
+(add-hook 'mhtml-mode-hook
+          (lambda ()
+            (visual-fill-column-mode -1)
+            (visual-line-mode -1)
+            (electric-indent-local-mode -1)
+            (toggle-truncate-lines -1)))

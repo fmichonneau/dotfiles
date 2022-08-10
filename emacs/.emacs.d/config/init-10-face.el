@@ -14,19 +14,19 @@
   (load-theme 'material t)
   )
 
-;; focus-mode (dims surrounding sections of buffer)
-(use-package focus
-  :ensure t
-  :config
-  (focus-mode 1)
-  )
+;; ;; focus-mode (dims surrounding sections of buffer)
+;; (use-package focus
+;;   :ensure t
+;;   :config
+;;   (focus-mode 1)
+;;   )
 
 ;; Beacon mode
-(use-package beacon
-  :ensure t
-  :config
-  (beacon-mode 1)
-  )
+;; (use-package beacon
+;;   :ensure t
+;;   :config
+;;   (beacon-mode 1)
+;;   )
 
 
 ;; consolas font
@@ -70,8 +70,11 @@
 ;;       '((width . 100)   ; characters in a line
 ;;         (height . 52))) ; number of lines
 
-; open emacs full screen
-(add-to-list 'default-frame-alist '(fullscreen . maximized))
+                                        ; open emacs full screen
+;;(add-to-list 'default-frame-alist '(fullscreen . maximized))
+
+;; abbrev don't ask
+(setq save-abbrevs 'silently)
 
 ;; Diminish extraneous info in the modeline
 (diminish 'abbrev-mode)
@@ -86,7 +89,6 @@
 (setq column-number-mode 1)
 (setq ns-use-srgb-colorspace nil)
 (use-package spaceline-config
-  :ensure spaceline
   :config
   ;; Set some parameters of the spaceline
   (setq spaceline-highlight-face-func 'spaceline-highlight-face-evil-state)
@@ -97,9 +99,9 @@
     "a better buffer position display"
     (let ((buffer-position (format-mode-line "%p")))
       (if (string= buffer-position "Top") "top"
-	(if (string= buffer-position "Bottom") "bot"
-	  (if (string= buffer-position "All") "all"
-	    "%p")))
+  	(if (string= buffer-position "Bottom") "bot"
+  	  (if (string= buffer-position "All") "all"
+  	    "%p")))
       )
     )
 
@@ -109,41 +111,41 @@
     (when vc-mode
       (powerline-raw
        (s-trim (concat
-		(let ((backend (symbol-name (vc-backend (buffer-file-name)))))
-		  (substring vc-mode (+ (length backend) 2)))
-		(when (buffer-file-name)
-		  (pcase (vc-state (buffer-file-name))
-		    (`up-to-date " ")
-		    (`edited "*")
-		    (`added "@")
-		    (`unregistered "?")
-		    (`removed "-")
-		    (`needs-merge " Con")
-		    (`needs-update " Upd")
-		    (`ignored "!")
-		    (_ " Unk"))))))))
+  		(let ((backend (symbol-name (vc-backend (buffer-file-name)))))
+  		  (substring vc-mode (+ (length backend) 2)))
+  		(when (buffer-file-name)
+  		  (pcase (vc-state (buffer-file-name))
+  		    (`up-to-date " ")
+  		    (`edited "*")
+  		    (`added "@")
+  		    (`unregistered "?")
+  		    (`removed "-")
+  		    (`needs-merge " Con")
+  		    (`needs-update " Upd")
+  		    (`ignored "!")
+  		    (_ " Unk"))))))))
 
   ;; Makes a shorter org-clock string.
   (defun gjstein-org-clock-get-clock-string ()
     "Makes a clock string for org."
     (let ((clocked-time (org-clock-get-clocked-time)))
       (if org-clock-effort
-	  (let* ((effort-in-minutes
-		  (org-duration-string-to-minutes org-clock-effort))
-		 (work-done-str
-		  (propertize
-		   (org-minutes-to-clocksum-string clocked-time)
-		   'face (if (and org-clock-task-overrun (not org-clock-task-overrun-text))
-			     'org-mode-line-clock-overrun 'org-mode-line-clock)))
-		 (effort-str (org-minutes-to-clocksum-string effort-in-minutes))
-		 (clockstr (propertize
-			    (concat  "%s/" effort-str
-				     " " (replace-regexp-in-string "%" "%%" org-clock-heading))
-			    'face 'org-mode-line-clock)))
-	    (format clockstr work-done-str))
-	(propertize (concat (org-minutes-to-clocksum-string clocked-time)
-			    (format " %s" org-clock-heading))
-		    'face 'org-mode-line-clock))))
+  	  (let* ((effort-in-minutes
+  		  (org-duration-string-to-minutes org-clock-effort))
+  		 (work-done-str
+  		  (propertize
+  		   (org-minutes-to-clocksum-string clocked-time)
+  		   'face (if (and org-clock-task-overrun (not org-clock-task-overrun-text))
+  			     'org-mode-line-clock-overrun 'org-mode-line-clock)))
+  		 (effort-str (org-minutes-to-clocksum-string effort-in-minutes))
+  		 (clockstr (propertize
+  			    (concat  "%s/" effort-str
+  				     " " (replace-regexp-in-string "%" "%%" org-clock-heading))
+  			    'face 'org-mode-line-clock)))
+  	    (format clockstr work-done-str))
+  	(propertize (concat (org-minutes-to-clocksum-string clocked-time)
+  			    (format " %s" org-clock-heading))
+  		    'face 'org-mode-line-clock))))
   (setq spaceline-org-clock-format-function 'gjstein-org-clock-get-clock-string)
 
   (spaceline-compile
@@ -177,3 +179,4 @@
 )
 
 (fset 'yes-or-no-p 'y-or-n-p)
+(normal-erase-is-backspace-mode 1)
