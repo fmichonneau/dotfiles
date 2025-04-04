@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+mkdir -p ~/etc
+mkdir -p ~/.R-library
+
 stow emacs
 stow git
 stow R

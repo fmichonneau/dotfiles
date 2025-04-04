@@ -1,13 +1,17 @@
+#!/bin/bash
+
 ## For this to work add the following at the bottom of ~/.bashrc
 # if [ -f ~/.bash_customizations ]; then
 #    . ~/.bash_customizations
 # fi
 
+PATH=$PATH:$HOME/.local/bin
 
-## Powerline Shell
-function _update_ps1() {
-    PS1=$(powerline-shell $?)
-}
+
+# ## Powerline Shell
+# function _update_ps1() {
+#     PS1=$(powerline-shell $?)
+# }
 
 
 ## History configuration
@@ -26,12 +30,28 @@ bind '"\e[B": history-search-forward'
 # After each command, append to the history file and reread it
 PROMPT_COMMAND="${PROMPT_COMMAND:+$PROMPT_COMMAND$'\n'}history -a; history -c; history -r"
 
-if [[ $TERM != linux && ! $PROMPT_COMMAND =~ _update_ps1 ]]; then
-    PROMPT_COMMAND="_update_ps1; $PROMPT_COMMAND"
-fi
+# if [[ $TERM != linux && ! $PROMPT_COMMAND =~ _update_ps1 ]]; then
+#     PROMPT_COMMAND="_update_ps1; $PROMPT_COMMAND"
+# fi
 
 # Make sure we enable wayland for firefox
 export MOZ_ENABLE_WAYLAND=1
 
 ## for rbenv shell integration:
 eval "$(rbenv init - bash)"
+
+# Spark configuration
+export JAVA_HOME="/usr/lib/jvm/java-17-openjdk-amd64"
+export SPARK_HOME="/home/francois/bin/spark-3.3.2-bin-hadoop3"
+export PYTHONPATH="$SPARK_HOME/python:$SPARK_HOME/python/lib/py4j-0.10.9.5-src.zip:$PYTHONPATH"
+export PATH="$SPARK_HOME/bin:$SPARK_HOME/python:$PATH"
+export XDG_DATA_DIRS="/var/lib/flatpak/exports/share:/home/francois/.local/share/flatpak/exports/share:$XDG_DATA_DIRS"
+
+## cargo path
+export PATH="$HOME/.cargo/bin":$PATH
+
+## use Starship
+eval "$(starship init bash)"
+
+## duckDB
+export PATH='/home/francois/.duckdb/cli/latest':$PATH

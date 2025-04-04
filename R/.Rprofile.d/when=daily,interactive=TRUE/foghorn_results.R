@@ -3,7 +3,7 @@ try(
     foghorn_results <- function() {
       if (require(foghorn, quietly = TRUE)) {
         foghorn::summary_cran_results(email = "francois.michonneau@gmail.com",
-          pkg = c("ridigbio", "mregions"))
+          pkg = c("arrow"))
       }
     }
     foghorn_results()

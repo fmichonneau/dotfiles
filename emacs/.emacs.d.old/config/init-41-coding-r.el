@@ -51,6 +51,12 @@
                '("\\.[rR]markdown\\'" . poly-markdown+r-mode)))
 
 
+(use-package quarto-mode
+  :ensure t
+  :mode (("\\.Rmd" . poly-quarto-mode))
+  )
+
+
 ;; ESS -------------------------------------------------------------------------
 ;; R process in its own window (to the right)
 (defun fm/r()

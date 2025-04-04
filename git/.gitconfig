@@ -18,8 +18,16 @@
 	gpgSign = true
 [branch]
 	autosetuprebase = always
+	sort = -committerdate
 [usethis]
 [remote "origin"]
 	fetch = +refs/pull/*/head:refs/remotes/origin/pr/*
 [init]
 	defaultBranch = main
+[pull]
+	rebase = true
+[merge]
+	conflictstyle = zdiff3
+	tool = meld
+[diff]
+	algorithm = histogram

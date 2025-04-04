@@ -1,0 +1,49 @@
+// Zed settings
+//
+// For information on how to configure Zed, see the Zed
+// documentation: https://zed.dev/docs/configuring-zed
+//
+// To see all of Zed's default settings without changing your
+// custom settings, run the `open default settings` command
+// from the command palette or from `Zed` application menu.
+{
+  "assistant": {
+    "default_model": {
+      "provider": "zed.dev",
+      "model": "claude-3-5-sonnet-latest"
+    },
+    "version": "2"
+  },
+  "features": {
+    "edit_prediction_provider": "zed"
+  },
+  "ui_font_size": 16,
+  "buffer_font_size": 16.0,
+  "buffer_font_family": "Consolas",
+  "buffer_font_weight": 100,
+  "theme": {
+    "mode": "system",
+    "light": "Material Theme Lighter High Contrast",
+    "dark": "One Dark"
+  },
+  "languages": {
+    "R": {
+      "language_servers": ["air"]
+    },
+    "Python": {
+      "language_servers": ["ruff"]
+    },
+    "Markdown": {
+      "format_on_save": "on",
+      "soft_wrap": "preferred_line_length"
+    },
+    "shellscript": {
+      "formatter": {
+        "external": {
+          "command": "shfmt",
+          "arguments": ["-i", "2", "-s", "-w", "-"]
+        }
+      }
+    }
+  }
+}

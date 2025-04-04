@@ -58,3 +58,5 @@ flycheck_*.el
 # R files
 .Rhistory
 .RData
+.ipynb_checkpoints*
+.venv*

@@ -1,0 +1,8 @@
+matches:
+  - trigger: "::rc"
+    label: "R - chunk"
+    replace: |      
+      ```{r}
+      #| 
+      $|$
+      ```
