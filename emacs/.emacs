@@ -1,102 +1,188 @@
-;; Resources
-;; - file structure from: https://github.com/gjstein/emacs.d/tree/master/config
-;; - https://github.com/howardabrams/dot-files/blob/master/emacs.org
+(setq
+ site-run-file nil                         ; No site-wide run-time initializations.
+ inhibit-default-init t                    ; No site-wide default library
+ gc-cons-threshold most-positive-fixnum    ; Very large threshold for garbage
+                                        ; collector during init
+ package-enable-at-startup nil)            ; We'll use straight.el
+
+(setq native-comp-eln-load-path
+      (list (expand-file-name "eln-cache" user-emacs-directory)))
+
+;; Reset garbage collector limit after init process has ended (8Mo)
+(add-hook 'after-init-hook
+          #'(lambda () (setq gc-cons-threshold (* 8 1024 1024))))
 
 
+;; bootstrap straight.el
+(defvar bootstrap-version)
+(let ((bootstrap-file
+       (expand-file-name
+        "straight/repos/straight.el/bootstrap.el"
+        (or (bound-and-true-p straight-base-dir)
+            user-emacs-directory)))
+      (bootstrap-version 7))
+  (unless (file-exists-p bootstrap-file)
+    (with-current-buffer
+        (url-retrieve-synchronously
+         "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
+         'silent 'inhibit-cookies)
+      (goto-char (point-max))
+      (eval-print-last-sexp)))
+  (load bootstrap-file nil 'nomessage))
+
+;; integrate straight.el with use-package
+(straight-use-package 'use-package)
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+
+(use-package straight
+  :custom
+  (straight-use-package-by-default t))
 
 
-;; User Info
+;; General text handling
+(setq-default fill-column 80                          ; Default line width 
+              sentence-end-double-space nil           ; Use a single space after dots
+              bidi-paragraph-direction 'left-to-right ; Faster
+              truncate-string-ellipsis "…")           ; Nicer ellipsis
 
-(setq user-full-name "François Michonneau")
-(setq user-mail-address "francois.michonneau@gmail.com")
+(use-package visual-fill-column
+  :commands visual-fill-column-mode
 
+  :custom
+  (fill-column-enable-sensible-window-split t)
 
-;; Install use-package if necessary
-(require 'package)
-(setq package-enable-at-startup nil)
-(let* ((no-ssl (and (memq system-type '(windows-nt ms-dos))
-                    (not (gnutls-available-p))))
-       (proto (if no-ssl "http" "https")))
-  ;; Comment/uncomment these two lines to enable/disable MELPA and MELPA Stable as desired
-  (add-to-list 'package-archives (cons "melpa" (concat proto "://melpa.org/packages/")) t)
-  ;;(add-to-list 'package-archives (cons "melpa-stable" (concat proto "://stable.melpa.org/packages/")) t)
-  ;;(add-to-list 'package-archives (cons "marmalade" (concat proto "://marmalade-repo.org/packages/")) t)
-  (when (< emacs-major-version 24)
-    ;; For important compatibility libraries like cl-lib
-    (add-to-list 'package-archives '("gnu" . (concat proto "://elpa.gnu.org/packages/")))))
-(package-initialize)
+  :bind
+  (("C-x p" . 'visual-fill-column-mode)))
 
-;; Bootstrap `use-package'
-(unless (package-installed-p 'use-package)
-  (package-refresh-contents)
-  (package-install 'use-package))
+;; Configure nano
+;; NANO base
+(straight-use-package
+ '(nano :type git :host github :repo "rougier/nano-emacs"))
 
-(use-package auto-package-update
-  :config
-  (setq auto-package-update-delete-old-versions t)
-  (setq auto-package-update-hide-results t)
-  (auto-package-update-maybe))
+;; NANO splash
+(straight-use-package
+ '(nano-splash :type git :host github :repo "rougier/nano-splash"))
 
-;; Enable use-package
-(eval-when-compile
-  (require 'use-package))
+;; NANO theme
+(straight-use-package
+ '(nano-theme :type git :host github :repo "rougier/nano-theme"))
 
-;; if you use :diminish
-(use-package diminish
-  :ensure t)
+;; NANO modeline
+(straight-use-package
+ '(nano-modeline :type git :host github :repo "rougier/nano-modeline"))
 
-;; if you use any :bind variant
-(use-package bind-key
-  :ensure t)
-
-;; Set the path variable
-(use-package exec-path-from-shell
-  :ensure t
-  :config (exec-path-from-shell-initialize))
-
-;; === Face Customization ===
-(load-file "~/.emacs.d/config/init-10-face.el")
-
-;; === ====
-(load-file "~/.emacs.d/config/init-20-nav-interface.el")
-
-;; === LaTeX and Markdown modes ===
-(load-file "~/.emacs.d/config/init-30-md+tex.el")
+(require 'nano-theme)
 
 
-;; === coding and editing ===
-(load-file "~/.emacs.d/config/init-40-coding.el")
-(load-file "~/.emacs.d/config/init-41-coding-r.el")
+;; Fonts
+(setq nano-font-size 10.5)
+;;(setq nano-font-family-monospaced "Consolas")
+(setq nano-font-family-monospaced "0xProto")
 
-;; init.el ends
+;; (setq nano-fonts-use t) ; Use theme font stack
+(nano-light)            ; Use theme light version
+(nano-mode)             ; Recommended settings
 
+(require 'nano-splash)
+(require 'nano-modeline)
 
-
+(load-file "~/.emacs.d/config/init-1-common.el")
+(load-file "~/.emacs.d/config/init-3-coding.el")
+(load-file "~/.emacs.d/config/init-4-r.el")
+(load-file "~/.emacs.d/config/init-4-python.el")
+(load-file "~/.emacs.d/config/init-4-rust.el")
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(LaTeX-command "xelatex")
- '(auth-sources '("~/.authinfo.gpg" "~/.authinfo" "~/.netrc"))
- '(blink-cursor-mode nil)
- '(c-basic-offset 4)
- '(case-fold-search t)
- '(column-number-mode t)
+ '(connection-local-criteria-alist
+   '(((:application tramp :protocol "flatpak")
+      tramp-container-connection-local-default-flatpak-profile)
+     ((:application tramp)
+      tramp-connection-local-default-system-profile tramp-connection-local-default-shell-profile)))
+ '(connection-local-profile-alist
+   '((tramp-container-connection-local-default-flatpak-profile
+      (tramp-remote-path "/app/bin" tramp-default-remote-path "/bin" "/usr/bin" "/sbin" "/usr/sbin" "/usr/local/bin" "/usr/local/sbin" "/local/bin" "/local/freeware/bin" "/local/gnu/bin" "/usr/freeware/bin" "/usr/pkg/bin" "/usr/contrib/bin" "/opt/bin" "/opt/sbin" "/opt/local/bin"))
+     (tramp-connection-local-darwin-ps-profile
+      (tramp-process-attributes-ps-args "-acxww" "-o" "pid,uid,user,gid,comm=abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ" "-o" "state=abcde" "-o" "ppid,pgid,sess,tty,tpgid,minflt,majflt,time,pri,nice,vsz,rss,etime,pcpu,pmem,args")
+      (tramp-process-attributes-ps-format
+       (pid . number)
+       (euid . number)
+       (user . string)
+       (egid . number)
+       (comm . 52)
+       (state . 5)
+       (ppid . number)
+       (pgrp . number)
+       (sess . number)
+       (ttname . string)
+       (tpgid . number)
+       (minflt . number)
+       (majflt . number)
+       (time . tramp-ps-time)
+       (pri . number)
+       (nice . number)
+       (vsize . number)
+       (rss . number)
+       (etime . tramp-ps-time)
+       (pcpu . number)
+       (pmem . number)
+       (args)))
+     (tramp-connection-local-busybox-ps-profile
+      (tramp-process-attributes-ps-args "-o" "pid,user,group,comm=abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ" "-o" "stat=abcde" "-o" "ppid,pgid,tty,time,nice,etime,args")
+      (tramp-process-attributes-ps-format
+       (pid . number)
+       (user . string)
+       (group . string)
+       (comm . 52)
+       (state . 5)
+       (ppid . number)
+       (pgrp . number)
+       (ttname . string)
+       (time . tramp-ps-time)
+       (nice . number)
+       (etime . tramp-ps-time)
+       (args)))
+     (tramp-connection-local-bsd-ps-profile
+      (tramp-process-attributes-ps-args "-acxww" "-o" "pid,euid,user,egid,egroup,comm=abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ" "-o" "state,ppid,pgid,sid,tty,tpgid,minflt,majflt,time,pri,nice,vsz,rss,etimes,pcpu,pmem,args")
+      (tramp-process-attributes-ps-format
+       (pid . number)
+       (euid . number)
+       (user . string)
+       (egid . number)
+       (group . string)
+       (comm . 52)
+       (state . string)
+       (ppid . number)
+       (pgrp . number)
+       (sess . number)
+       (ttname . string)
+       (tpgid . number)
+       (minflt . number)
+       (majflt . number)
+       (time . tramp-ps-time)
+       (pri . number)
+       (nice . number)
+       (vsize . number)
+       (rss . number)
+       (etime . number)
+       (pcpu . number)
+       (pmem . number)
+       (args)))
+     (tramp-connection-local-default-shell-profile
+      (shell-file-name . "/bin/sh")
+      (shell-command-switch . "-c"))
+     (tramp-connection-local-default-system-profile
+      (path-separator . ":")
+      (null-device . "/dev/null"))))
  '(custom-safe-themes
-   '("a24c5b3c12d147da6cef80938dca1223b7c7f70f2f382b26308eba014dc4833a" "732b807b0543855541743429c9979ebfb363e27ec91e82f463c91e68c772f6e3" "98cc377af705c0f2133bb6d340bf0becd08944a588804ee655809da5d8140de6" "5dc0ae2d193460de979a463b907b4b2c6d2c9c4657b2e9e66b8898d2592e3de5" "3d5ef3d7ed58c9ad321f05360ad8a6b24585b9c49abcee67bdcbb0fe583a6950" "e9776d12e4ccb722a2a732c6e80423331bcb93f02e089ba2a4b02e85de1cf00e" "7122873f9ac192e4f2cfafe1679fe6b3db658ac64593efe4bc10c52d7573c6c1" "90d329edc17c6f4e43dbc67709067ccd6c0a3caa355f305de2041755986548f2" "19ba41b6dc0b5dd34e1b8628ad7ae47deb19f968fe8c31853d64ea8c4df252b8" "986e44c951ca6f5afc46b2942881fa95f9793e120256a209d85a19ae9e4bbf7a" "4f249287f4867a103144a3e14e0cb59e36bfbfdb9013492fbe6128c75bbe0d5d" "9e609fed2a991a7f75c17e57f3277d21539baedc8b56ad9f6807a7febf0fdec0" default))
- '(flycheck-r-linters "with_defaults(object_camel_case_linter=NULL)")
- '(grep-find-ignored-directories
-   '("SCCS" "RCS" "CVS" "MCVS" ".src" ".svn" ".git" ".hg" ".bzr" "_MTN" "_darcs" "{arch}" "_site"))
- '(magit-commit-arguments '("--gpg-sign=037DBA3399ECB8E4"))
- '(markdown-command "pandoc")
- '(package-selected-packages
-   '(format-all csv-mode lsp-mode transient magit spaceline poly-R poly-markdown all-the-icons easy-jekyll jekyll-modes evil-tutor beacon focus dockerfile-mode company-irony emacs-material-theme yasnippet yaml-mode writeroom-mode use-package string-inflection ssh-agency polymode nlinum multiple-cursors math-symbol-lists markdown-mode magithub linum-off keychain-environment key-combo git-commit-insert-issue gh flymake-yaml flycheck flx-ido exec-path-from-shell ess electric-spacing company-flx checkbox auto-package-update auctex ace-jump-mode))
- '(polymode-exporter-output-file-format "%s"))
+   '("1781e8bccbd8869472c09b744899ff4174d23e4f7517b8a6c721100288311fa5" default))
+ '(warning-suppress-log-types '((comp)))
+ '(warning-suppress-types '((comp))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(markdown-inline-code-face ((t (:inherit font-lock-string-face)))))
-(put 'upcase-region 'disabled nil)
+ )

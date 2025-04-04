@@ -1,5 +1,5 @@
 create_last_updated <- function(path) {
-  saveRDS(Sys.time(), file=path)
+  saveRDS(Sys.time(), file = path)
 }
 
 is_outdated <- function(path_last_updated, max_days = 7) {
@@ -10,18 +10,19 @@ is_outdated <- function(path_last_updated, max_days = 7) {
 
   time_since_update <- difftime(Sys.time(), last_updated, units = "days")
 
-  res <- time_since_update >=  max_days
+  res <- time_since_update >= max_days
   attr(res, "last_update_in_days") <- floor(
     as.numeric(time_since_update)
   )
   res
 }
 
-auto_update <- function(update_freq = 7,
-                        last_updated = "~/.R/.date-last-update.rds",
-                        last_output = "~/.R/.output-last-update.log",
-                        lib.loc = "~/.R/library/") {
-
+auto_update <- function(
+  update_freq = 7,
+  last_updated = "~/.R/.date-last-update.rds",
+  last_output = "~/.R/.output-last-update.log",
+  lib.loc = "~/.R-library/"
+) {
   if (!is_outdated(last_updated, update_freq)) {
     cli::cli_alert_success("Library is up to date.")
     return(invisible())
@@ -43,11 +44,20 @@ auto_update <- function(update_freq = 7,
     return(invisible())
   }
 
+  cli::cli_alert_info(
+    "{length(to_upgrade)} package{?s} need{?/s} to updated: {.pkg {to_upgrade}}."
+  )
+
   z <- try(
-    capture.output({
-      pak::pkg_install(to_upgrade, ask = FALSE)
-    },
-    file = last_output),
+    capture.output(
+      {
+        pak::pkg_install(to_upgrade, upgrade = TRUE, ask = FALSE)
+        ## pak doesn't check built?
+        update.packages(lib.loc = lib.loc, ask = FALSE, checkBuilt = TRUE)
+      },
+      file = last_output,
+      split = interactive()
+    ),
     silent = FALSE
   )
 
@@ -70,10 +80,12 @@ auto_update <- function(update_freq = 7,
   ## silent = FALSE
   ## )
 
-  if(inherits(z, "try-error")) {
-    cli::cli_alert_danger(paste(
-      "Auto update failed. "
-    ))
+  if (inherits(z, "try-error")) {
+    cli::cli_alert_danger(
+      paste(
+        "Auto update failed. "
+      )
+    )
   } else {
     create_last_updated(last_updated)
     cli::cli_alert_success("Auto update succeed, date of update saved.")
