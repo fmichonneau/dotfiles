@@ -1,7 +1,7 @@
 [user]
 	name = François Michonneau
 	email = francois.michonneau@gmail.com
-	signingKey = 6300592C6D8DFC21406D525B037DBA3399ECB8E4
+	signingKey = 2E94D0E40C4399FF
 [core]
 	editor = emacs
 	excludesfile = ~/.gitignore_global
